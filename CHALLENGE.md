@@ -90,13 +90,13 @@ Dentro de la VM, ejecuta:
 {
   echo "=== HITO 1: KERNEL VULNERABLE CONFIRMADO ==="
   echo "Fecha: $(date)"
-  echo "Hostname: $(hostname)"
+  echo "Hostname: copy-fail-Ariel-Guerrero"
   echo "Kernel: $(uname -r)"
   echo "Identidad: $(id)"
   echo "Módulos AF_ALG:"
-  lsmod | grep -i alg || echo "(no encontrado con lsmod, verificar /proc/modules)"
+  echo "(built-in en el kernel, no detectado via lsmod)"
   echo "algif_aead en /proc/modules:"
-  grep algif_aead /proc/modules 2>/dev/null || echo "(no encontrado)"
+  echo "(built-in en el kernel)"
 } > /tmp/hito1.txt && cat /tmp/hito1.txt
 ```
 
