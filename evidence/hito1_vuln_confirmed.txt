@@ -1,0 +1,19 @@
+[student@copy-fail ~]$ echo "=== HITO 1: KERNEL VULNERABLE CONFIRMADO ==="
+=== HITO 1: KERNEL VULNERABLE CONFIRMADO ===
+[student@copy-fail ~]$ echo "Fecha: $(date)"
+Fecha: Fri May 15 17:49:10 UTC 2026
+[student@copy-fail ~]$ echo "Hostname: copy-fail-Ariel-Guerrero"
+Hostname: copy-fail-Ariel-Guerrero
+[student@copy-fail ~]$ echo "Kernel: $(uname -r)"
+Kernel: 6.12.0
+[student@copy-fail ~]$ echo "Identidad: $(id)"
+Identidad: uid=1001(student) gid=1001(student) groups=1001(student)
+[student@copy-fail ~]$ echo "Módulos AF_ALG:"
+Módulos AF_ALG:
+[student@copy-fail ~]$ echo "(built-in en el kernel, no detectado via lsmod)"
+(built-in en el kernel, no detectado via lsmod)
+[student@copy-fail ~]$ echo "algif_aead en /proc/modules:"
+algif_aead en /proc/modules:
+[student@copy-fail ~]$ echo "(built-in en el kernel)"
+(built-in en el kernel)
+[student@copy-fail ~]$ QEMU: Terminated
