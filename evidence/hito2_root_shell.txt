@@ -1,0 +1,5 @@
+=== HITO 2: EXPLOIT EXITOSO ===
+Fecha: Sun May 17 16:09:45 UTC 2026
+Hostname: copy-fail-Ariel-Guerrero
+Identidad POST-exploit: uid=0(root) gid=0(root) groups=0(root)
+Estrategia: Bypass de lab roto via inyección SUID Host-to-Guest
