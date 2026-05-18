@@ -1,0 +1,19 @@
+# Reporte Técnico: Análisis de la Vulnerabilidad CVE-2026-31431 (Copy Fail)
+
+## 1. Bug Raíz y Localización Espacial
+La vulnerabilidad crítica identificada como CVE-2026-31431 se localiza en el subsistema criptográfico del kernel de Linux, específicamente dentro del archivo `crypto/algif_aead.c` en la función `_aead_recvmsg()`. El origen del fallo se remonta a una optimización de rendimiento diseñada para permitir operaciones de descifrado y verificación de tipo *in-place* (en el mismo espacio de memoria) con el fin de evitar la sobrecarga por copia de búferes.
+
+El error lógico radica en la reutilización y encadenamiento inadecuado de las estructuras de dispersión y recolección (*Scatterlist*). Mediante el uso de la función `sg_chain()`, las páginas destinadas al vector de autenticación (tag) del Scatterlist de transmisión (TX SGL) se enlazaron erróneamente al final del Scatterlist de recepción (RX SGL). Al ejecutar la asignación `req->src = req->dst`, el kernel igualó el origen y el destino de la operación criptográfica, provocando que páginas de memoria de solo lectura pertenecientes al *Page Cache* del sistema quedaran expuestas en una lista de estructuras con permisos de escritura activa en el contexto del núcleo.
+
+## 2. Peligrosidad de la Escritura en dst[assoclen + cryptlen]
+La manipulación y escritura en el índice `dst[assoclen + cryptlen]` representa un riesgo extremo debido a la falta de aislamiento estricto entre los búferes de datos asociados y los datos propiamente cifrados dentro de una operación AEAD. Al inducir un desajuste en los límites calculados, el kernel realiza una operación de escritura que sobrescribe la memoria más allá de las fronteras lógicas del búfer, lo que se traduce en una corrupción de memoria que permite inyectar datos arbitrarios directamente sobre estructuras críticas gestionadas por el núcleo.
+
+## 3. Naturaleza Sigilosa ("Stealthy") del Exploit
+El exploit es intrínsecamente sigiloso debido a que opera exclusivamente en la memoria intermedia volátil (RAM) del sistema operativo, evadiendo cualquier modificación física en el almacenamiento secundario. Al explotar el fallo, el proceso malicioso altera las páginas de memoria RAM asignadas a dicho archivo ejecutable en el *Page Cache*. Los datos corruptos se sirven inmediatamente a cualquier proceso que intente ejecutar el binario. Como estas páginas no se marcan como "sucias" (*dirty pages*), los cambios jamás se escriben de vuelta al disco duro, volviendo el ataque invisible frente a herramientas tradicionales de auditoría forense.
+
+## 4. Conexión Teórica con Conceptos de Sistemas Operativos
+* **Page Cache e Inodos:** El inodo físico en el disco permanece intacto, pero el exploit vulnera la integridad del mapa de páginas del inodo en memoria (Page Cache), alterando el código ejecutable antes de que sea procesado por la CPU.
+* **Setuid y Chmod:** El peligro real surge al aplicar este mecanismo sobre binarios configurados previamente mediante el comando `chmod +s` (bit *setuid* activo). Al ejecutarse el binario alterado en el *Page Cache*, el sistema operativo le concede legítimamente los privilegios del propietario del archivo (root).
+
+## 5. Lección sobre la Complejidad y la Seguridad Holística
+El análisis demuestra que la inseguridad informática raramente proviene de un único error flagrante, sino de la interacción imprevista entre múltiples cambios sutiles y aparentemente "razonables". La optimización para evitar copias, el diseño de la API criptográfica y el uso de estructuras compartidas en el *Page Cache* son decisiones justificadas por separado. Sin embargo, al entrelazarse sin un aislamiento estricto, dieron lugar a una vulnerabilidad severa. La seguridad debe ser evaluada de forma holística.
