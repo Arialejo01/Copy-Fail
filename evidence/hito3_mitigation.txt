@@ -1,0 +1,10 @@
+=== HITO 3: MITIGACIÓN TEMPORAL ===
+Fecha: Sun May 17 16:19:12 UTC 2026
+Hostname: copy-fail-Ariel-Guerrero
+algif_aead en lsmod:
+(módulo NO cargado - mitigación activa)
+
+Intento de exploit post-mitigación:
+The futex facility returned an unexpected error code.
+Aborted
+(exploit falló como se esperaba)
