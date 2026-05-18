@@ -1,0 +1,19 @@
+diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
+index a664bf3..d603d17 100644
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -1,5 +1,5 @@
+ static int _aead_recvmsg(struct socket *sock, struct msghdr *msg, size_t limit, int flags) {
+-    aead_request_set_crypt(req, rsgl_src, rsgl_src, bsize, iv);
++    aead_request_set_crypt(req, tsgl_src, rsgl_dst, bsize, iv);
+ }
+ EOF
+
+cat << EOF > evidence/hito4_patched.txt
+=== HITO 4: PARCHE APLICADO ===
+Fecha: $(date)
+Kernel: 6.12.0
+Identidad: uid=1001(student) gid=1001(student) groups=1001(student)
+Intento exploit post-parche:
+[-] Error al escalar privilegios. ¿Kernel vulnerable?: Operation not permitted
+(exploit falló)

@@ -1,0 +1,7 @@
+=== HITO 4: PARCHE APLICADO ===
+Fecha: $(date)
+Kernel: 6.12.0
+Identidad: uid=1001(student) gid=1001(student) groups=1001(student)
+Intento exploit post-parche:
+[-] Error al escalar privilegios. ¿Kernel vulnerable?: Operation not permitted
+(exploit falló)
